@@ -1,0 +1,9 @@
+.next
+out
+node_modules
+.npm-cache
+.npm-cache-ci
+.env*.local
+*.tsbuildinfo
+.DS_Store
+input_convos/

@@ -1,0 +1,181 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #030712;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  overscroll-behavior: none;
+  position: fixed;
+  inset: 0;
+}
+
+body > div {
+  height: 100%;
+  overflow: hidden;
+}
+
+button,
+textarea {
+  font: inherit;
+}
+
+.maplibregl-map {
+  background: #030712;
+}
+
+.maplibregl-canvas {
+  outline: none;
+}
+
+.maplibregl-ctrl-top-right {
+  top: 12px;
+  right: 12px;
+}
+
+.maplibregl-ctrl-group {
+  overflow: hidden;
+  border: 1px solid rgba(125, 211, 252, 0.18) !important;
+  background: rgba(2, 6, 23, 0.72) !important;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.24) !important;
+  backdrop-filter: blur(10px);
+}
+
+.maplibregl-ctrl-group button {
+  background-color: transparent !important;
+}
+
+.opportunity-popup .maplibregl-popup-content {
+  border: 1px solid rgba(125, 211, 252, 0.45) !important;
+  border-radius: 8px !important;
+  background: #020617 !important;
+  box-shadow: 0 22px 80px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.05) !important;
+  color: #f8fafc !important;
+  padding: 0 !important;
+}
+
+.opportunity-popup .maplibregl-popup-tip {
+  border-top-color: #020617 !important;
+  border-bottom-color: #020617 !important;
+}
+
+.opportunity-popup .maplibregl-popup-close-button {
+  top: 7px !important;
+  right: 7px !important;
+  display: grid !important;
+  width: 24px !important;
+  height: 24px !important;
+  place-items: center !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 6px !important;
+  background: rgba(15, 23, 42, 0.9) !important;
+  color: #e2e8f0 !important;
+  font-size: 18px !important;
+  line-height: 1 !important;
+}
+
+.opportunity-popup .maplibregl-popup-close-button:hover {
+  border-color: rgba(252, 165, 165, 0.45) !important;
+  background: rgba(127, 29, 29, 0.55) !important;
+  color: #fff !important;
+}
+
+.map-popup {
+  max-width: 340px;
+  padding: 16px 44px 16px 16px;
+}
+
+.map-popup-kicker {
+  margin-bottom: 4px;
+  color: #7dd3fc;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.map-popup strong {
+  display: block;
+  color: #fff;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.map-popup p {
+  margin: 7px 0 0;
+  color: #e2e8f0;
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.opportunity-marker {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--marker-color), white 25%);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--marker-color), #020617 80%);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--marker-color), transparent 78%), 0 0 18px color-mix(in srgb, var(--marker-color), transparent 42%);
+  color: #f8fafc;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
+}
+
+.opportunity-marker svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+.opportunity-marker:hover,
+.opportunity-marker--selected {
+  border-color: #fff;
+  background: color-mix(in srgb, var(--marker-color), #020617 55%);
+  transform: scale(1.18);
+  z-index: 2;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+::-webkit-scrollbar {
+  width: 9px;
+  height: 9px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.7);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(125, 211, 252, 0.28);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(125, 211, 252, 0.46);
+}
