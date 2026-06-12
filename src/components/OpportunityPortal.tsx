@@ -7,6 +7,7 @@ import { Activity, BriefcaseBusiness, Building2, CalendarDays, CheckCircle2, Dat
 import { CLOUD_API_BASE_URL, authenticatedFetch } from '@/lib/apiClient';
 import { auth } from '@/lib/firebase';
 import { buildMapEntities, buildOpportunities, fallbackOpportunities, IntelData, LAYER_META, Opportunity, OpportunityLayer, REGIONS, RegionId, TOUCHPOINTS } from '@/lib/opportunities';
+import ReportsWorkspace, { ReportDoc } from '@/components/ReportsWorkspace';
 
 const OpportunityMap = dynamic(() => import('@/components/OpportunityMap'), { ssr: false });
 
@@ -87,6 +88,8 @@ export default function OpportunityPortal() {
   const [activeLayers, setActiveLayers] = useState(DEFAULT_LAYERS);
   const [powerPerson, setPowerPerson] = useState<any | null>(null);
   const [user, setUser] = useState<User | null>(auth.currentUser);
+  const [reportsOpen, setReportsOpen] = useState(false);
+  const [focusedReport, setFocusedReport] = useState<ReportDoc | null>(null);
   const region = REGIONS.find((item) => item.id === regionId) || REGIONS[0];
 
   const opportunities = useMemo(() => {
@@ -97,8 +100,9 @@ export default function OpportunityPortal() {
     const live = buildMapEntities(data, region, intent, activeLayers);
     return live.length ? live : fallbackOpportunities(region).filter((item) => activeLayers[item.layer]);
   }, [activeLayers, data, intent, region]);
+  const displayedMapEntities = focusedReport?.regionId === region.id ? focusedReport.entities : mapEntities;
   const [selectedId, setSelectedId] = useState<string>('');
-  const selected = mapEntities.find((item) => item.id === selectedId) || opportunities.find((item) => item.id === selectedId) || opportunities[0] || mapEntities[0];
+  const selected = displayedMapEntities.find((item) => item.id === selectedId) || mapEntities.find((item) => item.id === selectedId) || opportunities.find((item) => item.id === selectedId) || opportunities[0] || displayedMapEntities[0];
   const powerPeople = useMemo(() => powerForRegion(data.federal_power || [], region.state), [data.federal_power, region.state]);
   const chamberCounts = useMemo(() => ({
     'sikeston-mo': {
@@ -196,6 +200,10 @@ export default function OpportunityPortal() {
               </div>
             </div>
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+              <button onClick={() => setReportsOpen(true)} className="inline-flex h-full items-center justify-center gap-2 rounded border border-amber-200/30 bg-amber-200/10 px-3 py-2 text-xs font-bold text-amber-100 transition hover:bg-amber-200/15">
+                <Sparkles className="h-4 w-4" />
+                Opportunity Reports
+              </button>
               <div className="grid grid-cols-2 gap-2 text-xs sm:grid-cols-4">
                 <Metric label="Nodes" value={totals.loadedRecords.toLocaleString()} />
                 <Metric label="Opportunities" value={totals.count.toLocaleString()} />
@@ -272,17 +280,22 @@ export default function OpportunityPortal() {
           </aside>
 
           <div className="order-1 min-h-0 overflow-hidden lg:order-2">
-            <OpportunityMap region={region} opportunities={mapEntities} selectedId={selected?.id} onSelect={(item) => setSelectedId(item.id)} />
+            <OpportunityMap region={region} opportunities={displayedMapEntities} selectedId={selected?.id} onSelect={(item) => setSelectedId(item.id)} />
           </div>
 
           <aside className="order-3 min-h-0 overflow-y-auto border-t border-white/10 bg-slate-950/85 p-4 backdrop-blur-xl lg:border-l lg:border-t-0">
             <div className="flex items-center justify-between gap-3">
               <div>
-                <div className="text-xs font-bold uppercase tracking-[0.18em] text-amber-200">Opportunity Queue</div>
-                <p className="mt-1 text-xs text-slate-500">{region.label} ranked against current intent.</p>
+                <div className="text-xs font-bold uppercase tracking-[0.18em] text-amber-200">{focusedReport?.regionId === region.id ? 'Report Focus' : 'Opportunity Queue'}</div>
+                <p className="mt-1 text-xs text-slate-500">{focusedReport?.regionId === region.id ? focusedReport.name : `${region.label} ranked against current intent.`}</p>
               </div>
               <Route className="h-5 w-5 text-amber-200" />
             </div>
+            {focusedReport?.regionId === region.id && (
+              <button onClick={() => setFocusedReport(null)} className="mt-3 w-full rounded border border-cyan-300/25 bg-cyan-300/10 px-3 py-2 text-xs font-semibold text-cyan-100 transition hover:bg-cyan-300/15">
+                Return to Explore Mode
+              </button>
+            )}
 
             {selected && <SelectedOpportunity opportunity={selected} />}
 
@@ -321,6 +334,19 @@ export default function OpportunityPortal() {
         </footer>
       </div>
       {powerPerson && <PowerPersonModal person={powerPerson} regionLabel={region.label} onClose={() => setPowerPerson(null)} />}
+      {reportsOpen && (
+        <ReportsWorkspace
+          user={user}
+          region={region}
+          candidates={mapEntities}
+          focusedReportId={focusedReport?.id}
+          onClose={() => setReportsOpen(false)}
+          onFocusReport={(report) => {
+            setFocusedReport(report);
+            if (report) setReportsOpen(false);
+          }}
+        />
+      )}
     </main>
   );
 }
