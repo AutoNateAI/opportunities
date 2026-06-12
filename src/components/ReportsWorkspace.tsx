@@ -281,12 +281,12 @@ export default function ReportsWorkspace({ user, region, candidates, focusedRepo
   };
 
   return (
-    <div className="absolute inset-0 z-40 grid bg-slate-950 text-slate-100 lg:grid-cols-[360px_minmax(0,1fr)]">
+    <div className="absolute bottom-0 right-0 top-0 z-40 grid w-full max-w-[1080px] bg-slate-950/98 text-slate-100 shadow-[0_0_80px_rgba(0,0,0,0.65)] lg:grid-cols-[330px_minmax(0,1fr)]">
       <aside className="min-h-0 overflow-y-auto border-r border-white/10 bg-slate-950 p-4">
         <div className="flex items-center justify-between gap-3">
           <button onClick={onClose} className="inline-flex items-center gap-2 rounded border border-white/10 bg-white/[0.04] px-2.5 py-2 text-xs font-semibold text-slate-200 transition hover:bg-white/10">
             <ArrowLeft className="h-4 w-4" />
-            Map
+            Main View
           </button>
           <button onClick={() => setCreatorOpen(true)} className="inline-flex items-center gap-2 rounded border border-emerald-300/30 bg-emerald-300/10 px-2.5 py-2 text-xs font-semibold text-emerald-100 transition hover:bg-emerald-300/15">
             <Plus className="h-4 w-4" />

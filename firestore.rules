@@ -1,0 +1,57 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function ownsExisting() {
+      return signedIn() && resource.data.ownerUid == request.auth.uid;
+    }
+
+    function ownsIncoming() {
+      return signedIn() && request.resource.data.ownerUid == request.auth.uid;
+    }
+
+    match /opportunityReports/{reportId} {
+      allow create: if ownsIncoming();
+      allow read, update, delete: if ownsExisting();
+    }
+
+    match /campaigns/{campaignId} {
+      allow create: if ownsIncoming();
+      allow read, update, delete: if ownsExisting();
+    }
+
+    match /touchpoints/{touchpointId} {
+      allow create: if ownsIncoming();
+      allow read, update, delete: if ownsExisting();
+    }
+
+    match /savedFilters/{filterId} {
+      allow create: if ownsIncoming();
+      allow read, update, delete: if ownsExisting();
+    }
+
+    match /contacts/{contactId} {
+      allow create: if ownsIncoming();
+      allow read, update, delete: if ownsExisting();
+    }
+
+    match /mapSnapshots/{snapshotId} {
+      allow create: if ownsIncoming();
+      allow read, update, delete: if ownsExisting();
+    }
+
+    match /githubRepos/{repoId} {
+      allow read: if signedIn();
+      allow write: if false;
+    }
+
+    match /aiWorkflows/{workflowId} {
+      allow read: if signedIn();
+      allow write: if false;
+    }
+  }
+}

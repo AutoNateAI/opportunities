@@ -200,10 +200,15 @@ export default function OpportunityPortal() {
               </div>
             </div>
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-              <button onClick={() => setReportsOpen(true)} className="inline-flex h-full items-center justify-center gap-2 rounded border border-amber-200/30 bg-amber-200/10 px-3 py-2 text-xs font-bold text-amber-100 transition hover:bg-amber-200/15">
-                <Sparkles className="h-4 w-4" />
-                Opportunity Reports
-              </button>
+              <div className="grid grid-cols-2 rounded border border-white/10 bg-white/[0.035] p-1 text-xs font-bold">
+                <button onClick={() => { setReportsOpen(false); setFocusedReport(null); }} className={`rounded px-3 py-2 transition ${!reportsOpen ? 'bg-cyan-300/15 text-cyan-100' : 'text-slate-400 hover:text-white'}`}>
+                  Main Map
+                </button>
+                <button onClick={() => setReportsOpen(true)} className={`inline-flex items-center justify-center gap-2 rounded px-3 py-2 transition ${reportsOpen ? 'bg-amber-200/15 text-amber-100' : 'text-slate-400 hover:text-white'}`}>
+                  <Sparkles className="h-4 w-4" />
+                  Reports
+                </button>
+              </div>
               <div className="grid grid-cols-2 gap-2 text-xs sm:grid-cols-4">
                 <Metric label="Nodes" value={totals.loadedRecords.toLocaleString()} />
                 <Metric label="Opportunities" value={totals.count.toLocaleString()} />
@@ -343,7 +348,6 @@ export default function OpportunityPortal() {
           onClose={() => setReportsOpen(false)}
           onFocusReport={(report) => {
             setFocusedReport(report);
-            if (report) setReportsOpen(false);
           }}
         />
       )}
